@@ -1,0 +1,27 @@
+# Alternative deployment: Cowrie in Docker (easier local lab / faster rebuild)
+# Usage on the EC2 (or locally):  docker compose up -d
+# Then redirect host 22 -> 2222 as in terraform/user_data.sh.tpl if desired.
+version: "3.8"
+
+services:
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: cowrie-honeypot
+    restart: unless-stopped
+    ports:
+      - "2222:2222"   # Cowrie SSH (fake shell)
+      # - "2223:2223" # Telnet - keep commented unless studying Telnet bots
+    volumes:
+      - ./cowrie.cfg:/cowrie/cowrie-git/etc/cowrie.cfg:ro
+      - cowrie-logs:/cowrie/cowrie-git/var/log/cowrie
+      - cowrie-downloads:/cowrie/cowrie-git/var/lib/cowrie/downloads
+    # Honeypot container gets NO privileged mode, NO host mounts beyond logs,
+    # and runs on an isolated compose network by default.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  cowrie-logs:
+  cowrie-downloads:

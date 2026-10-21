@@ -1,0 +1,16 @@
+.env
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+__pycache__/
+*.pyc
+.venv/
+*.pem
+*.key
+*.zip
+honeypot-sessions.json
+var/
+downloads/
+node_modules/
+.DS_Store
